@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pizza Cart API Pamphlet using frameworks</title>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" />
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    
+    <script src="index.js" defer></script>
+    <script src="//unpkg.com/alpinejs" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+
+
+<body>
+    <h1 class = "api">Valentia Pizza Cart</h1>
+    
+    <main class="container" style="background-color: #d8e6e0c5">
+        <section>
+            <div class="card">
+                <div class="row" x-data="pizzaCartWithAPIWidget">
+
+                    <div>Username: <input type="text" x-model="username" placeholder="Enter Username">
+                    </div>
+
+                    <section>
+                        <div class="row">
+
+                            <div><button @click="viewCart=true">ViewCart</button></div>
+                            <div class="l7 m12 s12" style="text-align: right;" style="text-align: center;">
+                                <div>
+
+                                    <div x-show="cart.total.toFixed(2)>0 && viewCart">
+                                        <button @click="viewCart=false">HideCart</button>
+                                        <table class="right" style="width: 50%; margin-left: auto; margin-right: auto;">
+                                            <tr>
+                                                <th>Flavour</th>
+                                                <th>Size</th>
+                                                <th>Add/Reduce</th>
+                                                <th>Quantity</th>
+                                                <th>Sum(R)</th>
+                                            </tr>
+
+                                            <template x-for="pizza in cart.pizzas">
+                                                <tr>
+                                                    <td x-text="pizza.flavour"></td>
+                                                    <td x-text="pizza.size"></td>
+                                                    <td><button x-on:click="add(pizza)">+</button>
+                                                        <button x-on:click="remove(pizza)">-</button>
+                                                    </td>
+                                                    <td x-text="pizza.qty"></td>
+                                                    <td x-text="pizza.total.toFixed(2)"></td>
+                                                </tr>
+
+                                            </template>
+                                            <tr>
+                                                <td>Total</td>
+                                                <td>
+                                                    R<span x-text="cart.total.toFixed(2)"></span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div x-show="payNow">
+                                                        <div x-text="paymentMessage" style="color: rgb(21, 0, 255);">Message....
+                                                        </div>
+                                                        <div>
+                                                            <div>
+                                                                <label for="">Enter Amount</label>
+                                                                <input class="input" type="number"
+                                                                    placeholder="Pay Amount" x-model="paymentAmount">
+                                                            </div><br>
+                                                            Your Change is: R<div class="message" x-show="change>0" x-text="change.toFixed(2)"></div><br>
+                                                            <div>
+                                                                <button x-on:click="pay"
+                                                                    class="waves-effect waves-light btn">
+                                                                    Pay Now</button>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                <td>
+                                                    <button x-show="!payNow" x-on:click="payNow=true"
+                                                        class="waves-effect waves-light btn">
+                                                        Check Out
+                                                    </button>
+                                                </td>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- FUNCTIONALITY TO THE BUTTON ENDS HERE -->
+                        </div>
+                    </section>
+                    <!-- ThIS SECTION OF IS FOR THE LIST OF ITEMS PUCHASED -->
+
+                    <h4 style="text-align: center;"> Valentia's Pizza Cart</h4>
+                    <div>
+                        <table>
+                            <tr>
+                                <th>IMAGE</th>
+                                <th>FLAVOUR</th>
+                                <th>SIZE</th>
+                                <th>PRICE</th>
+                                <th>PLACE ORDER</th>
+                            </tr>
+                            <!-- LOOPING THROUGH THE PIZZA STARTS HERE FOR THE SMALL PIZZA ALONE -->
+                            <template x-for="pizza in pizzas">
+                             
+                                <template x-if="pizza['size']=='small'">
+
+                                    <tr style="text-align: center; background-color: rgb(255, 34, 0)">
+                                        <td>
+                                            <img x-bind:src="pizzaImage(pizza)" width="120px" height="90px" alt="">
+                                        </td>
+                                        <td x-text="pizza.flavour"></td>
+                                        <td x-text="pizza.size"></td>
+                                        <td>R<strong><label x-text="pizza.price"></label></strong></td>
+                                        <td><button x-on:click="add(pizza)"
+                                                class="waves-effect waves-light btn">order</button></td>
+                                    </tr>
+                                </template>
+                            </template>
+
+                            <!-- LOOP ENDS HERE FOR SMALL PIZZA -->
+
+                            <!-- LOOPING THROUGH THE PIZZA STARTS HERE FOR THE MEDIUM PIZZA ALONE -->
+
+                            <template x-for="pizza in pizzas">
+                                <template x-if="pizza['size']=='medium'">
+
+                                    <tr style="text-align: center; background-color: rgb(130, 100, 132)">
+                                        <td>
+                                            <img x-bind:src="pizzaImage(pizza)" width="150px" height="120px" alt="">
+                                        </td>
+                                        <td x-text="pizza.flavour"></td>
+                                        <td x-text="pizza.size"></td>
+                                        <td>R<strong><label x-text="pizza.price"></label></strong></td>
+                                        <td><button x-on:click="add(pizza)"
+                                                class="waves-effect waves-light btn">order</button></td>
+                                    </tr>
+                                </template>
+                            </template>
+                            <!-- LOOP ENDS HERE FOR MEDIUM PIZZA -->
+                            <!-- LOOPING THROUGH THE PIZZA STARTS HERE FOR THE LARGE PIZZA ALONE -->
+
+                            <template x-for="pizza in pizzas">
+
+                                <template x-if="pizza['size']=='large'">
+
+                                    <tr style="text-align: center; background-color: rgb(255, 251, 0)">
+                                        <td>
+                                            <img x-bind:src="pizzaImage(pizza)" width="180px" height="150px" alt="">
+                                        </td>
+                                        <td x-text="pizza.flavour"></td>
+                                        <td x-text="pizza.size"></td>
+                                        <td>R<strong><label x-text="pizza.price"></label></strong></td>
+                                        <td><button x-on:click="add(pizza)"
+                                                class="waves-effect waves-light btn">order</button></td>
+                                    </tr>
+                                </template>
+                            </template>
+                            <!-- LOOP ENDS HERE FOR LARGE PIZZA -->
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+            </div>
+        </section>
+    </main>
+    <!--JavaScript at end of body for optimized loading-->
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+</body>
+<div class="container">
+    <div class="card">
+
+        <section>
+
+            <footer class="page-footer">
+
+                <div class="footer-copyright">
+                    <div class="row">
+                        <div class="col m8 l12 s12" style="text-align: center;">
+                            © 2023 Copyright Reserved<br>
+                            <a class="grey-text text-lighten-4 center" href="#!">Valentia &nbsp;&nbsp;
+                                <strong>Tel:</strong> +27749715583&nbsp;&nbsp; <strong>Email:</strong>
+                                siyanibaloyi62@gmail.com</a><br>
+                            
+                        </div>
+                    </div>
+                </div>
+            </footer>
+
+        </section>
+    </div>
+
+
+</div>
+
+</html>
